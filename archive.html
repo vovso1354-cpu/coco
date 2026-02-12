@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>★JACK'S PSYCHO FUNK★ COMPLETE ARCHIVE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=DotGothic16&display=swap');
+
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-green: #00ff66;
+            --neon-yellow: #ffff00;
+            --neon-blue: #00ffff;
+            --neon-red: #ff3131;
+            --bg-black: #050505;
+        }
+
+        /* [핵심] 화면 번쩍임 및 글리치 애니메이션 */
+        @keyframes screen-flash {
+            0%, 95%, 100% { background-color: var(--bg-black); }
+            96% { background-color: rgba(255, 0, 255, 0.2); }
+            97% { background-color: rgba(0, 255, 255, 0.2); }
+            98% { background-color: rgba(255, 255, 255, 0.1); }
+        }
+
+        @keyframes glitch-shake {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        body {
+            background-color: var(--bg-black);
+            background-image: 
+                linear-gradient(rgba(255, 0, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: white;
+            font-family: 'DotGothic16', sans-serif;
+            margin: 0;
+            padding: 20px 10px;
+            overflow-x: hidden;
+            position: relative;
+            animation: screen-flash 4s infinite linear;
+        }
+
+        .deco-obj { position: fixed; pointer-events: none; z-index: -1; opacity: 0.6; font-family: 'Black Han Sans'; }
+        .neon-sign { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor; animation: blink 3s infinite; }
+        .trash { font-size: 60px; filter: grayscale(1) brightness(0.5); }
+
+        .magazine-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 8px solid var(--neon-yellow);
+            background: rgba(10, 10, 10, 0.98);
+            box-shadow: 25px 25px 0px var(--neon-pink), 0 0 50px rgba(255, 255, 0, 0.2);
+            padding-bottom: 70px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 플레이어 스타일 수정: 상단 고정 */
+        .audio-player-fixed {
+            position: relative; /* 따라다니지 않게 수정 */
+            margin: 0 auto 20px auto;
+            background: #000; 
+            border: 4px solid var(--neon-pink);
+            padding: 10px 20px; 
+            z-index: 1000; 
+            box-shadow: 0 0 20px var(--neon-pink);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 15px; 
+            color: var(--neon-pink);
+            width: fit-content; 
+            max-width: 90vw;
+        }
+
+        header {
+            background: var(--neon-pink);
+            padding: clamp(30px, 8vw, 50px) 20px;
+            text-align: center;
+            border-bottom: 8px solid var(--neon-yellow);
+            transform: rotate(-1deg);
+            margin: -20px -20px 40px -20px;
+            box-shadow: 0 15px 30px rgba(255, 0, 255, 0.5);
+            position: relative;
+            animation: glitch-shake 0.2s infinite;
+        }
+        
+        header::before { content: 'CRITICAL ERROR'; position: absolute; top: 10px; left: 15px; font-size: 14px; color: black; background: yellow; padding: 2px 10px; }
+
+        h1 {
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: clamp(40px, 15vw, 80px);
+            margin: 0;
+            color: var(--neon-yellow);
+            text-shadow: 8px 8px 0px black, 0 0 30px white;
+            letter-spacing: -4px;
+            animation: text-pulse 1.5s infinite alternate;
+        }
+
+        @keyframes text-pulse { from { transform: scale(1); } to { transform: scale(1.03); } }
+
+        .subtitle {
+            font-size: clamp(14px, 4vw, 20px);
+            background: black;
+            display: inline-block;
+            padding: 5px 20px;
+            color: var(--neon-green);
+            border: 2px solid var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+            margin-top: 10px;
+        }
+
+        .marquee-bar {
+            background: white;
+            color: black;
+            font-weight: bold;
+            font-size: clamp(14px, 4vw, 20px);
+            padding: 12px 0;
+            border-top: 5px solid black;
+            border-bottom: 5px solid black;
+            box-shadow: 0 0 20px white;
+        }
+
+        .character-section { margin: 60px 30px; position: relative; }
+        @media (max-width: 600px) { .character-section { margin: 40px 15px; } }
+
+        .section-deco { position: absolute; font-size: 14px; top: -20px; opacity: 0.8; z-index: 5; font-weight: bold; }
+
+        .folder-card {
+            border: 4px solid white;
+            padding: clamp(20px, 5vw, 35px);
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .folder-card:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-8px); }
+
+        .profile-name {
+            font-size: clamp(24px, 8vw, 42px);
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-shadow: 0 0 15px currentColor;
+            flex-wrap: wrap;
+        }
+
+        .quote {
+            font-style: italic;
+            color: var(--neon-yellow);
+            margin-bottom: 20px;
+            display: block;
+            border-left: 6px solid currentColor;
+            padding-left: 20px;
+            text-shadow: 0 0 8px var(--neon-yellow);
+            font-size: clamp(16px, 4vw, 20px);
+            line-height: 1.4;
+        }
+
+        .profile-info { font-size: clamp(14px, 3.5vw, 18px); line-height: 1.8; color: #eee; position: relative; z-index: 2; }
+        .tag-box { font-size: 14px; margin-top: 25px; }
+        .tag { display: inline-block; padding: 5px 12px; border: 2px solid currentColor; margin-right: 8px; margin-bottom: 8px; background: rgba(0,0,0,0.5); font-weight: bold; }
+
+        .status-label {
+            position: absolute; top: -15px; right: 20px;
+            padding: 5px 15px; font-size: 14px; font-weight: bold;
+            transform: rotate(3deg);
+            z-index: 6;
+        }
+
+        .photo-gallery {
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            margin-top: -10px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 500px) { .photo-gallery { grid-template-columns: repeat(2, 1fr); } }
+
+        .photo-item {
+            aspect-ratio: 1/1; border: 3px solid white; cursor: pointer;
+            overflow: hidden; transition: 0.2s; position: relative;
+        }
+        
+        .photo-item img {
+            width: 100%; height: 100%; object-fit: cover; filter: contrast(1.2) brightness(0.8);
+        }
+        .photo-item:hover img { filter: contrast(1.5) brightness(1.1); }
+
+        #image-viewer {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 20000; justify-content: center; align-items: center;
+            cursor: zoom-out;
+        }
+        #image-viewer img { max-width: 90%; max-height: 90%; border: 5px solid white; box-shadow: 0 0 30px var(--neon-pink); }
+
+        .egg-icon {
+            position: absolute; bottom: 10px; left: 15px; font-size: 30px; opacity: 0.5; transition: 0.3s; z-index: 20;
+        }
+        .egg-icon:hover { opacity: 1; transform: scale(1.2) rotate(-10deg); filter: drop-shadow(0 0 10px white); }
+
+        .love-trigger {
+            position: absolute; bottom: 10px; right: 15px; font-size: 24px; opacity: 0.2; cursor: pointer; transition: 0.5s; z-index: 20;
+        }
+        .love-trigger:hover { opacity: 1; transform: scale(1.3); filter: drop-shadow(0 0 15px red); }
+
+        .btn-nsfw {
+            margin-top: 15px;
+            padding: 8px 15px;
+            background: #000;
+            color: var(--neon-red);
+            border: 2px solid var(--neon-red);
+            font-family: 'Black Han Sans';
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-block;
+            position: relative;
+            z-index: 25;
+            text-transform: uppercase;
+        }
+        .btn-nsfw:hover {
+            background: var(--neon-red);
+            color: white;
+            box-shadow: 0 0 15px var(--neon-red);
+        }
+
+        .letter-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box;
+        }
+        .letter-paper {
+            width: 100%; max-width: 500px; padding: 40px; border: 10px double white;
+            position: relative; font-family: 'DotGothic16', sans-serif; line-height: 1.6;
+            max-height: 80vh; overflow-y: auto; box-shadow: 0 0 50px rgba(255,255,255,0.2);
+        }
+        @media (max-width: 500px) { .letter-paper { padding: 20px; } }
+        .close-letter { position: absolute; top: 10px; right: 10px; color: white; cursor: pointer; font-size: 30px; }
+
+        .toxic-map {
+            margin: 60px 30px; padding: 40px; background: white; color: black;
+            border: 6px solid var(--neon-red); font-weight: bold; font-size: clamp(14px, 4vw, 20px);
+            position: relative; box-shadow: 0 0 40px rgba(255, 49, 49, 0.4);
+        }
+        @media (max-width: 600px) { .toxic-map { margin: 40px 15px; padding: 20px; } }
+        .toxic-map::before { content: '⚠ DANGER ⚠'; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); background: var(--neon-red); color: white; padding: 5px 30px; font-size: 18px; }
+
+        .join-form {
+            background: var(--neon-yellow); padding: clamp(20px, 5vw, 50px); margin: 40px 30px;
+            color: black; border: 8px solid black; position: relative;
+        }
+        @media (max-width: 600px) { .join-form { margin: 40px 15px; } }
+        
+        input, textarea {
+            width: 100%; background: rgba(255,255,255,0.9); border: 4px solid black;
+            padding: 18px; margin: 15px 0 25px 0; box-sizing: border-box; font-family: 'DotGothic16'; font-size: 18px;
+        }
+
+        .btn-funk {
+            width: 100%; background: black; color: var(--neon-yellow);
+            padding: 25px; border: none; font-size: clamp(20px, 6vw, 32px); font-weight: bold;
+            cursor: pointer; box-shadow: 15px 15px 0px var(--neon-pink); transition: 0.1s;
+        }
+
+        .jack-theme { border-color: var(--neon-yellow) !important; color: var(--neon-yellow); }
+        .erin-theme { border-color: var(--neon-blue) !important; color: var(--neon-blue); }
+        .jihan-theme { border-color: var(--neon-red) !important; color: var(--neon-red); }
+        .yeonwoo-theme { border-color: var(--neon-green) !important; color: var(--neon-green); }
+
+        @keyframes blink { 0%, 90%, 100% { opacity: 1; filter: brightness(1); } 92%, 98% { opacity: 0.2; filter: brightness(2); } }
+
+        .floating-lyrics {
+            position: fixed; width: 100%; height: 100%; top: 0; left: 0;
+            pointer-events: none; z-index: 1; overflow: hidden;
+        }
+
+        .lyric-item {
+            position: absolute; white-space: nowrap; font-size: clamp(14px, 4vw, 18px); font-weight: bold;
+            color: rgba(255, 255, 255, 0.4); text-shadow: 0 0 5px currentColor;
+            animation: move-random 10s linear infinite;
+        }
+
+        @keyframes move-random {
+            from { transform: translateY(100vh) rotate(var(--rot)); }
+            to { transform: translateY(-100vh) rotate(var(--rot)); }
+        }
+
+        #entrance-warning {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; z-index: 99999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: var(--neon-red);
+            font-family: 'Black Han Sans'; text-align: center; padding: 20px; box-sizing: border-box;
+        }
+        .warning-btn {
+            margin-top: 30px; padding: 20px 50px; background: var(--neon-red);
+            color: white; border: none; font-size: clamp(18px, 5vw, 24px); cursor: pointer;
+            box-shadow: 0 0 20px var(--neon-red);
+        }
+    </style>
+</head>
+<body>
+
+<div id="entrance-warning">
+    <h1 style="font-size: clamp(50px, 15vw, 100px); color: var(--neon-red); text-shadow: 0 0 30px red;">⚠ WARNING ⚠</h1>
+    <p style="font-size: clamp(18px, 5vw, 30px); color: white;">이 구역에 발을 들이는 순간, 당신의 영혼은 잭의 것입니다.</p>
+    <p style="color: yellow; margin-top: 10px;">(배경 음악이 자동으로 재생됩니다)</p>
+    <button class="warning-btn" onclick="startPsychofunk()">I ACCEPT THE DEAL</button>
+</div>
+
+<div class="floating-lyrics" id="lyrics-container"></div>
+
+<div class="deco-obj neon-sign" style="top:5%; left:2%; color:var(--neon-pink); font-size:70px; transform:rotate(-15deg);">OPEN</div>
+<div class="deco-obj neon-sign" style="bottom:10%; right:2%; color:var(--neon-blue); font-size:60px; transform:rotate(10deg);">24hr</div>
+<div class="deco-obj trash" style="top:40%; left:3%;">🥫</div>
+<div class="deco-obj trash" style="bottom:20%; left:5%; transform:rotate(45deg);">🚬</div>
+<div class="deco-obj trash" style="top:15%; right:5%;">🍾</div>
+
+<div class="magazine-container">
+    <div class="audio-player-fixed">
+        <span style="font-family: 'Black Han Sans'; font-size: 12px;">NOW PLAYING: JACKPOT.mp3</span>
+        <audio id="bgm" loop>
+            <source src="1.mp3" type="audio/mpeg">
+        </audio>
+        <button onclick="document.getElementById('bgm').paused ? document.getElementById('bgm').play() : document.getElementById('bgm').pause()" 
+                style="background: var(--neon-pink); border: none; padding: 5px 15px; cursor: pointer; font-weight: bold; font-size: 12px;">PLAY/PAUSE</button>
+    </div>
+
+    <header>
+        <h1>PSYCHO CLOUD</h1>
+        <div class="subtitle">PRIVATE ARCHIVE v.01 // NO ESCAPE</div>
+    </header>
+
+    <div class="marquee-bar">
+        <marquee scrollamount="20">★WELCOME TO HELL★BET YOUR LIFE★DON'T LOOK BACK★JACK IS WATCHING YOU★JACKPOT★</marquee>
+    </div>
+
+    <div class="character-section">
+        <div class="section-deco" style="color:var(--neon-yellow);">[ TARGET_01 ]</div>
+        <div class="status-label" style="background:var(--neon-yellow); color:black;">MAIN_PLAYMAKER</div>
+        <div class="folder-card jack-theme" onclick="toggleGallery('jack-gallery')">
+            <div class="profile-name">JACK <span style="font-size:22px; color:white;">(21 / 패션디자인과)</span></div>
+            <div class="quote">"자기야, 표정 예술이다! 잠깐만 그대로 있어봐, 사진 찍게~"</div>
+            <div class="profile-info">
+                <strong>[아이돌의 탈을 쓴 심연]</strong><br>
+                반반 머리에 키치한 액세서리를 두른 쾌락주의자. 도덕 관념이 거세된 미소로 타인의 파국을 감상한다. {{user}}를 새로운 자극제로 낙점하고 연인들의 질투를 부추기는 중.
+                <br><button class="btn-nsfw" onclick="event.stopPropagation(); viewImage('잭13.jpg'); setTimeout(()=>viewImage('잭14.jpg'), 2000);">🔓 UNLOCK 19+ SCENE</button>
+            </div>
+            <div class="tag-box">
+                <span class="tag">#쾌락주의</span> <span class="tag">#죄책감_제로</span> <span class="tag">#키드코어</span> <span class="tag">#폴라로이드</span>
+            </div>
+            <div class="egg-icon" onclick="openLetter('jack')">📸 🍭 🍬</div>
+            <div class="love-trigger" onclick="openLoveTrigger('jack')">🖤</div>
+        </div>
+        <div id="jack-gallery" class="photo-gallery">
+            <script>
+                for(let i=1; i<=5; i++) {
+                    let num = i < 10 ? '0' + i : i;
+                    document.write(`<div class="photo-item" onclick="viewImage('잭${num}.jpg')"><img src="잭${num}.jpg" alt="JACK_${num}"></div>`);
+                }
+            </script>
+        </div>
+    </div>
+
+    <div class="character-section">
+        <div class="section-deco" style="color:var(--neon-blue);">[ ERROR_01 ]</div>
+        <div class="status-label" style="background:var(--neon-blue); color:black;">SACRIFICE</div>
+        <div class="folder-card erin-theme" onclick="toggleGallery('erin-gallery')">
+            <div class="profile-name">ERIN <span style="font-size:22px; color:white;">(22 / 실용음악과)</span></div>
+            <div class="quote">"잭은 잘못 없어요... 다 내가 부족해서 그런 거야."</div>
+            <div class="profile-info">
+                <strong>[희생적인 성녀]</strong><br>
+                155cm 금발 보브컷의 보컬. 잭의 학대마저 사랑이라 믿으며 스스로 무너져가는 중독 상태. 잭의 모든 악행을 자기 탓으로 돌리며 눈물로 호소한다.
+                <br><button class="btn-nsfw" onclick="event.stopPropagation(); viewImage('에린11.jpg');">🔓 UNLOCK 19+ SCENE</button>
+            </div>
+            <div class="tag-box">
+                <span class="tag">#성녀놀이</span> <span class="tag">#가스라이팅</span> <span class="tag">#중독</span> <span class="tag">#자기희생</span>
+            </div>
+            <div class="egg-icon" onclick="openLetter('erin')">🎤 💧 🩹</div>
+            <div class="love-trigger" onclick="openLoveTrigger('erin')">💙</div>
+        </div>
+        <div id="erin-gallery" class="photo-gallery">
+            <script>
+                for(let i=1; i<=5; i++) {
+                    let num = i < 10 ? '0' + i : i;
+                    document.write(`<div class="photo-item" onclick="viewImage('에린${num}.jpg')"><img src="에린${num}.jpg" alt="ERIN_${num}"></div>`);
+                }
+            </script>
+        </div>
+    </div>
+
+    <div class="character-section">
+        <div class="section-deco" style="color:var(--neon-red);">[ OBSESSION_01 ]</div>
+        <div class="status-label" style="background:var(--neon-red); color:white;">TYRANT</div>
+        <div class="folder-card jihan-theme" onclick="toggleGallery('jihan-gallery')">
+            <div class="profile-name">JIHAN <span style="font-size:22px; color:white;">(24 / 경영학과)</span></div>
+            <div class="quote" style="color:var(--neon-red)">"내 장난감에 손대지 마. 사회적으로 매장당하고 싶지 않으면."</div>
+            <div class="profile-info">
+                <strong>[폭군과 사냥개]</strong><br>
+                188cm 흑발 장발의 카페 사장. 잭을 소유물로 여기며 철저히 통제하려 한다. 에린과 연우를 경멸하며 {{user}}를 소모품 취급한다.
+                <br><button class="btn-nsfw" onclick="event.stopPropagation(); viewImage('지한11.jpg');">🔓 UNLOCK 19+ SCENE</button>
+            </div>
+            <div class="tag-box">
+                <span class="tag">#통제욕</span> <span class="tag">#집착</span> <span class="tag">#권력형_폭군</span> <span class="tag">#장발남</span>
+            </div>
+            <div class="egg-icon" onclick="openLetter('jihan')">☕ ⛓️ 🚬</div>
+            <div class="love-trigger" onclick="openLoveTrigger('jihan')">❤️</div>
+        </div>
+        <div id="jihan-gallery" class="photo-gallery">
+            <script>
+                for(let i=1; i<=5; i++) {
+                    let num = i < 10 ? '0' + i : i;
+                    document.write(`<div class="photo-item" onclick="viewImage('지한${num}.jpg')"><img src="지한${num}.jpg" alt="JIHAN_${num}"></div>`);
+                }
+            </script>
+        </div>
+    </div>
+
+    <div class="character-section">
+        <div class="section-deco" style="color:var(--neon-green);">[ MANIA_01 ]</div>
+        <div class="status-label" style="background:var(--neon-green); color:black;">FANATIC</div>
+        <div class="folder-card yeonwoo-theme" onclick="toggleGallery('yeonwoo-gallery')">
+            <div class="profile-name">YEONWOO <span style="font-size:22px; color:white;">(20 / 애니과)</span></div>
+            <div class="quote">"형이 죽으라고 하면 죽을 거예요. 그러니까 나만 봐줘요..."</div>
+            <div class="profile-info">
+                <strong>[광적인 추종자]</strong><br>
+                165cm 보라색 단발의 신입생. 잭에게 완전히 세뇌되어 자해나 가해조차 서슴지 않는 노예. 잭의 명령이라면 무엇이든 수행하는 광기를 지녔다.
+                <br><button class="btn-nsfw" onclick="event.stopPropagation(); viewImage('연우11.jpg');">🔓 UNLOCK 19+ SCENE</button>
+            </div>
+            <div class="tag-box">
+                <span class="tag">#세뇌</span> <span class="tag">#광신도</span> <span class="tag">#맹목적</span> <span class="tag">#얀데레</span>
+            </div>
+            <div class="egg-icon" onclick="openLetter('yeonwoo')">📓 💉 💜</div>
+            <div class="love-trigger" onclick="openLoveTrigger('yeonwoo')">💚</div>
+        </div>
+        <div id="yeonwoo-gallery" class="photo-gallery">
+            <script>
+                for(let i=1; i<=5; i++) {
+                    let num = i < 10 ? '0' + i : i;
+                    document.write(`<div class="photo-item" onclick="viewImage('연우${num}.jpg')"><img src="연우${num}.jpg" alt="YEONWOO_${num}"></div>`);
+                }
+            </script>
+        </div>
+    </div>
+
+    <div class="toxic-map">
+        <div style="font-size: 32px; border-bottom: 5px solid black; margin-bottom: 25px; font-family:'Black Han Sans';">☣ THE TOXIC CYCLE ☣</div>
+        <div style="line-height:2.5;">JIHAN <span style="color:var(--neon-red)">↔ 경멸/공포 ↔</span> ERIN</div>
+        <div style="line-height:2.5;">ERIN <span style="color:var(--neon-pink)">↔ 질투/가식 ↔</span> YEONWOO</div>
+        <div style="line-height:2.5;">YEONWOO <span style="color:var(--neon-green)">↔ 저주/압박 ↔</span> JIHAN</div>
+        <div style="margin-top:25px; color:blue; background:#e0e0ff; padding:20px; border:4px dashed blue; text-align:center;">
+            YOU <span style="animation: blink 0.5s infinite; font-weight:bold;">▶▶ NEW TARGET ▶▶</span> JACK
+        </div>
+    </div>
+
+    <div class="join-form">
+        <h3 style="margin:0 0 25px 0; font-family:'Black Han Sans'; font-size:36px;">★ 신입생 프로필 설정 ★</h3>
+        <button class="btn-funk" onclick="alert('DEAL COMPLETE. 당신의 영혼을 배팅했습니다.')">ENTER THE ABYSS</button>
+    </div>
+</div>
+
+<div id="letter-overlay" class="letter-overlay" onclick="closeLetter()">
+    <div id="letter-content" class="letter-paper" onclick="event.stopPropagation()">
+        <span class="close-letter" onclick="closeLetter()">×</span>
+        <div id="letter-text"></div>
+    </div>
+</div>
+
+<div id="image-viewer" onclick="this.style.display='none'">
+    <img id="full-image">
+</div>
+
+<script>
+    const lyrics = [
+        "さあ、賭けようよ. 君의 인생, 전부僕에 맡겨？",
+        "아쉬블루의 유혹, 화려한 카지노",
+        "너의 그 겁먹은 표정, 100점짜리 배팅",
+        "ねえ、もっと震えて？ ゾクゾクするじゃない",
+        "결국 승자는, 처음부터 나였는걸!",
+        "Deal with the Devil! 視界를 좁히고",
+        "狂った夜의 螺旋을 踊れ！",
+        "절망을 걸고 사랑을 시작할까!",
+        "오른손엔 거짓말, 왼손엔 쾌락",
+        "Checkmate. 네 전부 잘 먹었습니다-"
+    ];
+
+    function startPsychofunk() {
+        document.getElementById('entrance-warning').style.display = 'none';
+        const bgm = document.getElementById('bgm');
+        bgm.play();
+        startFloatingLyrics();
+    }
+
+    function startFloatingLyrics() {
+        const container = document.getElementById('lyrics-container');
+        setInterval(() => {
+            const lyric = document.createElement('div');
+            lyric.className = 'lyric-item';
+            lyric.innerText = lyrics[Math.floor(Math.random() * lyrics.length)];
+            
+            const side = Math.random() > 0.5 ? 'left' : 'right';
+            lyric.style[side] = Math.random() * 150 + 'px';
+            lyric.style.top = '100vh';
+            lyric.style.color = Math.random() > 0.5 ? 'var(--neon-pink)' : 'var(--neon-blue)';
+            lyric.style.setProperty('--rot', (Math.random() * 40 - 20) + 'deg');
+            
+            container.appendChild(lyric);
+            setTimeout(() => lyric.remove(), 10000);
+        }, 800);
+    }
+
+    function toggleGallery(id) {
+        const gallery = document.getElementById(id);
+        gallery.style.display = gallery.style.display === 'grid' ? 'none' : 'grid';
+    }
+
+    function viewImage(src) {
+        const viewer = document.getElementById('image-viewer');
+        const fullImg = document.getElementById('full-image');
+        fullImg.src = src;
+        viewer.style.display = 'flex';
+    }
+
+    function closeLetter() {
+        document.getElementById('letter-overlay').style.display = 'none';
+    }
+
+    function openLoveTrigger(who) {
+        const overlay = document.getElementById('letter-overlay');
+        const content = document.getElementById('letter-content');
+        const text = document.getElementById('letter-text');
+        let html = '';
+
+        if(who === 'jack') {
+            content.style.background = 'white';
+            content.style.color = 'black';
+            content.style.borderColor = 'var(--neon-pink)';
+            html = `<h2 style="font-family:'Black Han Sans'; color:var(--neon-pink);">🖤 [SYSTEM: BREAKING THE CHARACTER]</h2>
+                    <p>당신이 그의 공허함을 꿰뚫어 보자, 잭의 장난기 어린 가면이 부서집니다.<br>
+                    "책임져, 자기가 내 머릿속을 엉망으로 만든 거니까."</p>`;
+        } else if(who === 'erin') {
+            content.style.background = '#eef';
+            content.style.color = '#336';
+            content.style.borderColor = 'var(--neon-blue)';
+            html = `<h2 style="font-family:'Black Han Sans'; color:var(--neon-blue);">💙 [SYSTEM: RECOVERY OF SOUL]</h2>
+                    <p>당신이 그녀의 존재 자체를 인정해주자, 에린은 처음으로 잭이 아닌 자신을 위해 눈물 흘립니다.<br>
+                    "잭이 무서워요. 하지만 당신의 손은... 너무 따뜻하네요."</p>`;
+        } else if(who === 'jihan') {
+            content.style.background = '#1a0000';
+            content.style.color = 'white';
+            content.style.borderColor = 'var(--neon-red)';
+            html = `<h2 style="font-family:'Black Han Sans'; color:var(--neon-red);">❤️ [SYSTEM: NEW POSSESSION]</h2>
+                    <p>당신의 유능함이 지한의 소유욕을 자극하여, 그의 타깃이 잭에서 당신으로 변경되었습니다.<br>
+                    "네 발목에 채워질 사슬은 잭의 것보다 훨씬 무거울 거다. 감당할 수 있겠어?"</p>`;
+        } else if(who === 'yeonwoo') {
+            content.style.background = '#100020';
+            content.style.color = 'var(--neon-green)';
+            content.style.borderColor = 'var(--neon-green)';
+            html = `<h2 style="font-family:'Black Han Sans'; color:var(--neon-green);">💚 [SYSTEM: CHANGE OF MASTER]</h2>
+                    <p>잭을 향하던 맹목적인 충성이 이제 당신에게로 꽂히기 시작합니다.<br>
+                    "잭 선배보다 훨씬 더 잔인하게 저를 다뤄주셔도 돼요. 저는 이제 당신 거니까."</p>`;
+        }
+
+        text.innerHTML = html;
+        overlay.style.display = 'flex';
+        event.stopPropagation();
+    }
+
+    function openLetter(who) {
+        const overlay = document.getElementById('letter-overlay');
+        const content = document.getElementById('letter-content');
+        const text = document.getElementById('letter-text');
+        
+        let html = '';
+        if(who === 'jack') {
+            content.style.background = 'var(--neon-pink)';
+            content.style.color = 'yellow';
+            content.style.borderColor = 'white';
+            html = `<h2 style="font-family:'Black Han Sans'">💌 From. 잭 😈</h2>
+                    <p>내일 축제 때 얌전히 내 손잡고 불꽃놀이 보러 오는 거야, 알았지?<br>
+                    도망가면 에린 기타 줄을 다 끊거나 지한이 카페를 부술 거니까, 내 옆에 꼭 붙어 있어!</p>`;
+        } else if(who === 'erin') {
+            content.style.background = '#001a33';
+            content.style.color = 'var(--neon-blue)';
+            content.style.borderColor = 'var(--neon-blue)';
+            html = `<h2 style="font-family:'Black Han Sans'">💌 From. 에린 💧</h2>
+                    <p>잭은 사랑받는 법을 몰라 서툰 것뿐이니, 제발 그를 자극하지 말고 멀리해 주세요.<br>
+                    망가진 잭의 곁은 제가 지킬 테니, 당신은 부디 상처받지 말고 평범하게 살아가길 바라요.</p>`;
+        } else if(who === 'jihan') {
+            content.style.background = 'black';
+            content.style.color = 'white';
+            content.style.borderColor = 'var(--neon-red)';
+            html = `<h2 style="font-family:'Black Han Sans'; color:var(--neon-red)">📜 From. 강지한 🍷</h2>
+                    <p>내 구역에서 잭과 알짱거리지 마라. 한 번만 더 내 심기를 건드리면 무사히 졸업 못 할 줄 알아.<br>
+                    주제 파악하고 얌전히 살아. 이건 부탁이 아니라 명령이다.</p>`;
+        } else if(who === 'yeonwoo') {
+            content.style.background = '#1a0033';
+            content.style.color = 'var(--neon-green)';
+            content.style.borderColor = 'var(--neon-green)';
+            html = `<h2 style="font-family:'Black Han Sans'">💌 From. 연우 💜</h2>
+                    <p>잭 선배 옆에서 웃는 네 모습이 역겨워. 네 전공 책 사이에 꽂아둔 커터칼 날은 확인했니?<br>
+                    한 번만 더 눈에 띄면 그땐 네 얼굴에 직접 '예술'을 해버릴 거야. 조심해.</p>`;
+        }
+
+        text.innerHTML = html;
+        overlay.style.display = 'flex';
+        event.stopPropagation();
+    }
+</script>
+
+</body>
+</html>

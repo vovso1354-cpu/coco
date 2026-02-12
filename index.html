@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WELCOME TO THE PSYCHO CLUB</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=DotGothic16&display=swap');
+
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-yellow: #ffff00;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Black Han Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .glitch-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .petal-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .door-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            perspective: 2000px;
+            transition: transform 2s ease-in;
+        }
+
+        .door {
+            position: absolute;
+            top: 0;
+            width: 51%;
+            height: 100%;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+            border: 6px solid var(--neon-pink);
+            box-sizing: border-box;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            display: flex;
+            align-items: center;
+            z-index: 30; /* 텍스트(z-index: 11)보다 높게 설정하여 손잡이를 앞으로 가져옴 */
+            box-shadow: inset 0 0 50px rgba(255, 0, 255, 0.3), 0 0 50px rgba(0,0,0,1);
+        }
+
+        .door-left {
+            left: 0; transform-origin: left;
+            border-right: 4px solid var(--neon-yellow);
+            justify-content: flex-end; padding-right: 15px;
+        }
+
+        .door-right {
+            right: 0; transform-origin: right;
+            border-left: 4px solid var(--neon-yellow);
+            justify-content: flex-start; padding-left: 15px;
+        }
+
+        .door-pattern {
+            position: absolute;
+            width: 250px; height: 250px;
+            max-width: 70vw;
+            border: 2px dashed var(--neon-pink);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: rotate-magic 20s linear infinite;
+        }
+        @keyframes rotate-magic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .handle {
+            width: 70px; height: 70px;
+            background: var(--neon-yellow);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--neon-yellow), inset 0 0 15px #000;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 25px; color: #000;
+            z-index: 40; /* 손잡이를 문 내부에서도 최상단으로 */
+            transition: 0.3s;
+            animation: vibrate 0.1s infinite;
+        }
+        @keyframes vibrate { 0% { transform: translate(0); } 50% { transform: translate(1px, 1px); } 100% { transform: translate(-1px, -1px); } }
+
+        .handle:hover, .handle:active {
+            transform: scale(1.2);
+            box-shadow: 0 0 40px var(--neon-yellow), 0 0 60px var(--neon-blue);
+        }
+
+        .welcome-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff; text-align: center;
+            z-index: 11; /* 문(30)보다 아래에 위치하여 손잡이가 위로 오게 함 */
+            pointer-events: none;
+            width: 100%;
+        }
+
+        .welcome-text h2 {
+            font-size: 10vw; /* 글자 크기를 살짝 줄여 시야 확보 */
+            text-shadow: 3px 3px 0px var(--neon-pink), -3px -3px 0px var(--neon-blue);
+            margin: 0;
+            animation: text-glitch 0.2s infinite;
+            white-space: nowrap;
+        }
+
+        .welcome-text p {
+            color: var(--neon-yellow);
+            letter-spacing: 3px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        @keyframes text-glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 1px); }
+            40% { transform: translate(-2px, -1px); }
+            60% { transform: translate(2px, 1px); }
+            80% { transform: translate(2px, -1px); }
+            100% { transform: translate(0); }
+        }
+
+        .inner-room {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: #000;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1;
+        }
+
+        .flash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 200;
+            display: none;
+        }
+
+        .door-open .door-left { transform: rotateY(-120deg); }
+        .door-open .door-right { transform: rotateY(120deg); }
+        .door-open .welcome-text { opacity: 0; transition: 0.5s; }
+        .door-open { transform: scale(4); }
+
+        .petal {
+            position: absolute;
+            background: var(--neon-pink);
+            border-radius: 150% 0 150% 0;
+            filter: drop-shadow(0 0 10px var(--neon-pink));
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        #loadingText {
+            color: var(--neon-blue); 
+            font-size: 7vw; 
+            display:none; 
+            font-family:'DotGothic16';
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glitch-overlay"></div>
+    <div class="flash" id="flashLayer"></div>
+    <div class="petal-container" id="petalContainer"></div>
+
+    <div class="door-wrapper" id="doorWrapper">
+        <div class="welcome-text">
+            <h2>PSYCHO CLOUD</h2>
+            <p>YOU ARE THE GUEST</p>
+        </div>
+
+        <div class="door door-left">
+            <div class="door-pattern"></div>
+            <div class="handle" onclick="openTheDoor()"><span>♣</span></div>
+        </div>
+        <div class="door door-right">
+            <div class="door-pattern" style="animation-direction: reverse; opacity: 0.05;"></div>
+            <div class="handle" onclick="openTheDoor()"><span>♠</span></div>
+        </div>
+
+        <div class="inner-room">
+            <div id="loadingText">
+                ACCESSING CORE... <br><span id="percent">0</span>%
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const petalContainer = document.getElementById('petalContainer');
+
+        function createPetal(isBurst = false) {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            
+            const sizeValue = Math.random() * 12 + 8;
+            const size = sizeValue + 'px';
+            petal.style.width = size;
+            petal.style.height = size;
+            petal.style.left = Math.random() * 100 + 'vw';
+            
+            const duration = isBurst ? Math.random() * 1 + 0.5 : Math.random() * 3 + 2;
+            petal.style.animationDuration = duration + 's';
+            
+            if(isBurst) {
+                petal.style.background = Math.random() > 0.5 ? '#00ffff' : '#ff00ff';
+            }
+
+            petalContainer.appendChild(petal);
+            setTimeout(() => petal.remove(), duration * 1000);
+        }
+
+        let petalInterval = setInterval(() => createPetal(), 200);
+
+        function openTheDoor() {
+            const wrapper = document.getElementById('doorWrapper');
+            const flash = document.getElementById('flashLayer');
+            const loading = document.getElementById('loadingText');
+            
+            flash.style.display = 'block';
+            setTimeout(() => { flash.style.display = 'none'; }, 100);
+
+            wrapper.classList.add('door-open');
+            
+            clearInterval(petalInterval);
+            for(let i=0; i<80; i++) {
+                setTimeout(() => createPetal(true), i * 15);
+            }
+
+            setTimeout(() => {
+                loading.style.display = 'block';
+                let p = 0;
+                let timer = setInterval(() => {
+                    p += Math.floor(Math.random() * 15) + 1;
+                    if(p >= 100) {
+                        p = 100;
+                        clearInterval(timer);
+                        window.location.href = 'archive.html';
+                    }
+                    document.getElementById('percent').innerText = p;
+                }, 100);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
